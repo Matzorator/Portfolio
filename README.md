@@ -1,4 +1,4 @@
-# Matthias Voigt – Persönliches Portfolio
+# Matthias Osypka – Persönliches Portfolio
 
 Willkommen zu meinem Portfolio! Hier präsentiere ich meine berufliche Entwicklung, meine technischen Fähigkeiten sowie aktuelle Projekte, die meine Leidenschaft für Softwareentwicklung und IT zeigen.
 
