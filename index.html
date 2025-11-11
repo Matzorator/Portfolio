@@ -1,262 +1,560 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link rel="stylesheet" href="style_tee.css" type="text/css" />
+    <title>Zuse Z3 Portfolio-Matthias Osypka</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Courier New", monospace;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        color: #00ff88;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 0;
+        overflow-x: hidden;
+      }
+
+      .scanlines {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: repeating-linear-gradient(
+          0deg,
+          rgba(0, 0, 0, 0.15),
+          rgba(0, 0, 0, 0.15) 1px,
+          transparent 1px,
+          transparent 2px
+        );
+        pointer-events: none;
+        z-index: 1000;
+      }
+
+      .container {
+        max-width: 1200px;
+        width: 95%;
+        padding: 40px;
+        background: rgba(20, 20, 40, 0.9);
+        border: 3px solid #00ff88;
+        box-shadow: 0 0 40px rgba(0, 255, 136, 0.3),
+          inset 0 0 60px rgba(0, 255, 136, 0.05);
+        border-radius: 10px;
+        position: relative;
+      }
+
+      .corner-decoration {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        border: 2px solid #00ff88;
+      }
+
+      .corner-decoration.top-left {
+        top: -2px;
+        left: -2px;
+        border-right: none;
+        border-bottom: none;
+      }
+
+      .corner-decoration.top-right {
+        top: -2px;
+        right: -2px;
+        border-left: none;
+        border-bottom: none;
+      }
+
+      .corner-decoration.bottom-left {
+        bottom: -2px;
+        left: -2px;
+        border-right: none;
+        border-top: none;
+      }
+
+      .corner-decoration.bottom-right {
+        bottom: -2px;
+        right: -2px;
+        border-left: none;
+        border-top: none;
+      }
+
+      h1 {
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 10px;
+        text-shadow: 0 0 20px rgba(0, 255, 136, 0.8);
+        animation: flicker 3s infinite alternate;
+      }
+
+      @keyframes flicker {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.95;
+        }
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #66ffaa;
+        margin-bottom: 40px;
+        font-size: 1.1em;
+        letter-spacing: 2px;
+      }
+
+      .computer-panel {
+        background: rgba(10, 10, 20, 0.8);
+        padding: 30px;
+        border: 2px solid #00ff88;
+        margin-bottom: 30px;
+        border-radius: 5px;
+        box-shadow: inset 0 0 20px rgba(0, 255, 136, 0.1);
+      }
+
+      .display-screen {
+        background: #000;
+        padding: 20px;
+        border: 3px solid #00ff88;
+        min-height: 150px;
+        margin-bottom: 20px;
+        font-size: 1.1em;
+        line-height: 1.8;
+        box-shadow: 0 0 30px rgba(0, 255, 136, 0.4);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .display-screen::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(0, 255, 136, 0.1),
+          transparent
+        );
+        animation: scan 3s infinite;
+      }
+
+      @keyframes scan {
+        0% {
+          left: -100%;
+        }
+        100% {
+          left: 100%;
+        }
+      }
+
+      .input-panel {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .binary-input {
+        background: #000;
+        border: 2px solid #00ff88;
+        color: #00ff88;
+        padding: 15px;
+        font-family: "Courier New", monospace;
+        font-size: 1.3em;
+        letter-spacing: 3px;
+        text-align: center;
+        box-shadow: inset 0 0 10px rgba(0, 255, 136, 0.2);
+      }
+
+      .binary-input::placeholder {
+        color: #006644;
+      }
+
+      .execute-btn {
+        background: linear-gradient(135deg, #00ff88 0%, #00cc66 100%);
+        border: none;
+        color: #000;
+        padding: 15px 30px;
+        font-family: "Courier New", monospace;
+        font-size: 1.1em;
+        font-weight: bold;
+        cursor: pointer;
+        text-transform: uppercase;
+        box-shadow: 0 5px 15px rgba(0, 255, 136, 0.4);
+        transition: all 0.3s;
+        letter-spacing: 1px;
+      }
+
+      .execute-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 255, 136, 0.6);
+      }
+
+      .execute-btn:active {
+        transform: translateY(0);
+      }
+
+      .relay-indicators {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .relay {
+        background: #000;
+        border: 2px solid #00ff88;
+        padding: 15px 10px;
+        text-align: center;
+        font-size: 0.9em;
+        transition: all 0.3s;
+      }
+
+      .relay.active {
+        background: #00ff88;
+        color: #000;
+        box-shadow: 0 0 20px rgba(0, 255, 136, 0.8);
+      }
+
+      .commands-list {
+        background: rgba(0, 0, 0, 0.5);
+        padding: 20px;
+        border: 1px solid #006644;
+        border-radius: 5px;
+      }
+
+      .commands-list h3 {
+        color: #00ff88;
+        margin-bottom: 15px;
+        font-size: 1.3em;
+        text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+      }
+
+      .command-item {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        gap: 20px;
+        padding: 12px;
+        margin-bottom: 10px;
+        background: rgba(0, 255, 136, 0.05);
+        border-left: 3px solid #00ff88;
+        transition: all 0.3s;
+      }
+
+      .command-item:hover {
+        background: rgba(0, 255, 136, 0.15);
+        transform: translateX(5px);
+      }
+
+      .command-code {
+        color: #ffcc00;
+        font-weight: bold;
+        font-size: 1.1em;
+        letter-spacing: 2px;
+      }
+
+      .command-desc {
+        color: #66ffaa;
+      }
+
+      .error {
+        color: #ff4444;
+        animation: pulse 1s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      .success {
+        color: #00ff88;
+        text-shadow: 0 0 10px rgba(0, 255, 136, 0.8);
+      }
+
+      .loading {
+        display: inline-block;
+        animation: blink 1s infinite;
+      }
+
+      @keyframes blink {
+        0%,
+        50% {
+          opacity: 1;
+        }
+        51%,
+        100% {
+          opacity: 0;
+        }
+      }
+
+      .footer {
+        text-align: center;
+        margin-top: 30px;
+        color: #66ffaa;
+        font-size: 0.9em;
+        opacity: 0.7;
+      }
+
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 1.8em;
+        }
+
+        .input-panel {
+          grid-template-columns: 1fr;
+        }
+
+        .command-item {
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+      }
+    </style>
   </head>
   <body>
-    <header>
-      <h1>Die Welt des Tees</h1>
-      <nav>
-        <ul>
-          <li><a href="#gruener-tee">Grüner Tee</a></li>
-          <li><a href="#schwarzer-tee">Schwarzer Tee</a></li>
-          <li><a href="#krauter-tee">Kräutertee</a></li>
-          <li><a href="#oolong-tee">Oolong Tee</a></li>
-        </ul>
-      </nav>
-    </header>
-    <main>
-      <section id="gruener-tee">
-        <h2>Grüner Tee</h2>
-        <p>
-        
- <section>
-    <img src="pics/gruenertee.png" alt="Grüner Tee" width="200" height="300"/>
-  <h3>Grüner Tee ist weit mehr als ein Getränk</h3>
-  <p>– er ist ein jahrtausendealtes Kulturgut, ein Heilmittel und ein Symbol für Achtsamkeit und Lebensfreude.</p>
+    <div class="scanlines"></div>
 
-  <h4>🌱 Ursprung und Tradition</h4>
-  <p>
-    Grüner Tee stammt ursprünglich aus China, wo er bereits vor über 4.000 Jahren getrunken wurde. Später verbreitete er sich nach Japan, Korea, Vietnam und Indien, wo sich jeweils eigene Sorten und Zubereitungsrituale entwickelten.
-    Anders als schwarzer Tee wird grüner Tee nicht fermentiert, sondern direkt nach der Ernte gedämpft oder geröstet, um die frischen Inhaltsstoffe zu bewahren.
-  </p>
-  <p>
-    In Japan etwa ist grüner Tee ein fester Bestandteil der Teezeremonie – ein meditativer Akt, bei dem jede Bewegung bewusst ausgeführt wird. In China hingegen wird grüner Tee oft mehrfach aufgegossen und in geselliger Runde genossen.
-  </p>
+    <div class="container">
+      <div class="corner-decoration top-left"></div>
+      <div class="corner-decoration top-right"></div>
+      <div class="corner-decoration bottom-left"></div>
+      <div class="corner-decoration bottom-right"></div>
 
-  <h4>🍃 Sortenvielfalt</h4>
-  <ul>
-    <li><strong>Sencha:</strong> Der beliebteste japanische Grüntee, frisch und leicht grasig.</li>
-    <li><strong>Matcha:</strong> Pulverisierter Tee, der in Wasser eingerührt wird – intensiv und reich an Antioxidantien.</li>
-    <li><strong>Gyokuro:</strong> Schattengewachsener Tee mit süßlichem Umami-Geschmack.</li>
-    <li><strong>Longjing (Drachenbrunnentee):</strong> Ein chinesischer Klassiker mit nussigem Aroma.</li>
-  </ul>
+      <h1>⚡ ZUSE Z3 PORTFOLIO ⚡</h1>
+      <div class="subtitle">
+        PROGRAMMGESTEUERTES NAVIGATIONSSYSTEM - Matthias Osypka
+      </div>
 
-  <h4>💚 Gesundheitliche Wirkung</h4>
-  <p>Grüner Tee enthält eine Fülle an bioaktiven Stoffen, darunter:</p>
-  <ul>
-    <li><strong>Catechine (v.a. EGCG):</strong> Antioxidantien, die Zellschutz bieten und Entzündungen hemmen.</li>
-    <li><strong>L-Theanin:</strong> Eine Aminosäure, die beruhigt und die Konzentration fördert.</li>
-    <li><strong>Koffein:</strong> Regt sanft an, ohne nervös zu machen – ideal für fokussiertes Arbeiten.</li>
-    <li><strong>Flavonoide:</strong> Unterstützen Herz-Kreislauf und wirken blutdrucksenkend.</li>
-  </ul>
-  <p>
-    Studien zeigen, dass grüner Tee das Risiko für Herzkrankheiten, Diabetes Typ 2 und bestimmte Krebsarten senken kann.
-    Auch die geistige Leistungsfähigkeit profitiert: Grüner Tee fördert die Aufmerksamkeit und das Gedächtnis, ohne die Nebenwirkungen von Kaffee.
-  </p>
-
-  <h4>🍵 Zubereitung mit Gefühl</h4>
-  <p>Die richtige Zubereitung ist entscheidend für Geschmack und Wirkung:</p>
-  <ul>
-    <li><strong>Wassertemperatur:</strong> 70–80 °C – zu heißes Wasser zerstört die feinen Aromen.</li>
-    <li><strong>Ziehzeit:</strong> 1–3 Minuten – je nach Sorte und gewünschter Intensität.</li>
-    <li><strong>Menge:</strong> Etwa 1 Teelöffel pro Tasse.</li>
-    <li><strong>Mehrfachaufguss:</strong> Hochwertige Tees können 2–3 Mal aufgegossen werden.</li>
-  </ul>
-  <p>
-    Ein Spritzer Zitronensaft kann die Aufnahme der Antioxidantien verbessern.
-    Matcha wird traditionell mit einem Bambusbesen aufgeschlagen – ein Ritual, das Körper und Geist verbindet.
-  </p>
-
-  <h4>🌿 Genussmoment mit Tiefe</h4>
-  <p>
-    Grüner Tee ist nicht nur gesund – er lädt zum Innehalten ein.
-    Ob morgens als sanfter Start in den Tag, nachmittags als Fokus-Booster oder abends als achtsames Ritual:
-    Jede Tasse ist eine Einladung, den Moment bewusst zu erleben.
-  </p>
-</section>
+      <div class="computer-panel">
+        <div class="display-screen" id="display">
+          <div>SYSTEM BEREIT...</div>
+          <div>Willkommen zur Zuse Z3 Interface</div>
+          <div>Geben Sie einen Binärcode ein, um zu navigieren.</div>
         </div>
-      <section id="schwarzer-tee">
-        <h2>Schwarzer Tee</h2>
-        <img src="pics/schwarzertee.png" alt="Schwarzer Tee" width="200" height="300"/>
-    <h3>Schwarzer Tee – flüssige Wärme aus der Welt der Gewürze</h3>
 
-  <p>– er ist ein Symbol für Gastfreundschaft, ein kulturelles Ritual und ein aromatischer Begleiter durch den Tag.</p>
+        <div class="relay-indicators" id="relays">
+          <div class="relay">R1</div>
+          <div class="relay">R2</div>
+          <div class="relay">R3</div>
+          <div class="relay">R4</div>
+          <div class="relay">R5</div>
+          <div class="relay">R6</div>
+          <div class="relay">R7</div>
+          <div class="relay">R8</div>
+        </div>
 
-  <h4>🌍 Ursprung und Tradition</h4>
-  <p>
-    Schwarzer Tee hat seine Wurzeln in China, wurde aber besonders in Indien, Sri Lanka und dem Nahen Osten zu einem festen Bestandteil des Alltags.
-    Im Gegensatz zu grünem Tee wird schwarzer Tee vollständig fermentiert – dieser Prozess verleiht ihm sein charakteristisches Aroma und die dunkle Farbe.
-  </p>
-  <p>
-    In orientalischen Kulturen wird schwarzer Tee oft aus kunstvoll verzierten Kannen in kleine Gläser gegossen – begleitet von Gewürzen wie Zimt, Kardamom oder Sternanis.
-    Er ist ein Zeichen der Wertschätzung und wird traditionell in geselliger Runde serviert – sei es in einem marokkanischen Teehaus oder bei einer türkischen Familienfeier.
-  </p>
+        <div class="input-panel">
+          <input
+            type="text"
+            class="binary-input"
+            id="codeInput"
+            placeholder="BINÄRCODE EINGEBEN..."
+            maxlength="8"
+          />
+          <button class="execute-btn" onclick="executeCode()">AUSFÜHREN</button>
+        </div>
+      </div>
 
-  <h4>🍂 Sortenvielfalt</h4>
-  <ul>
-    <li><strong>Assam:</strong> Kräftig und malzig – ideal für den Morgen.</li>
-    <li><strong>Darjeeling:</strong> Fein und blumig – oft als „Champagner unter den Tees“ bezeichnet.</li>
-    <li><strong>Earl Grey:</strong> Mit Bergamotte aromatisiert – elegant und duftend.</li>
-    <li><strong>Türkischer Çay:</strong> Stark aufgebrüht und in kleinen Gläsern serviert – ein Klassiker des Orients.</li>
-  </ul>
+      <div class="commands-list">
+        <h3>▶ VERFÜGBARE BEFEHLSCODES</h3>
 
-  <h4>🧠 Gesundheitliche Wirkung</h4>
-  <p>Schwarzer Tee enthält wertvolle Inhaltsstoffe, die Körper und Geist beleben:</p>
-  <ul>
-    <li><strong>Polyphenole:</strong> Antioxidantien, die das Immunsystem stärken und Zellschutz bieten.</li>
-    <li><strong>Koffein:</strong> Wirkt anregend und fördert die Konzentration – ideal für einen klaren Kopf.</li>
-    <li><strong>Flavonoide:</strong> Unterstützen Herz-Kreislauf und können den Blutdruck regulieren.</li>
-    <li><strong>Theaflavine:</strong> Entstehen durch Fermentation und wirken entzündungshemmend.</li>
-  </ul>
-  <p>
-    Studien zeigen, dass regelmäßiger Konsum von schwarzem Tee das Risiko für Herzinfarkte und Schlaganfälle senken kann.
-    Auch die Verdauung wird angeregt – besonders nach einer reichhaltigen Mahlzeit.
-  </p>
+        <div class="command-item">
+          <div class="command-code">00000001</div>
+          <div class="command-desc">React & Frontend Projekte</div>
+        </div>
 
-  <h4>🍵 Zubereitung mit Charakter</h4>
-  <p>Die Zubereitung von schwarzem Tee ist ein Ritual für sich:</p>
-  <ul>
-    <li><strong>Wassertemperatur:</strong> 90–100 °C – kochendes Wasser bringt die Aromen voll zur Geltung.</li>
-    <li><strong>Ziehzeit:</strong> 3–5 Minuten – je nach gewünschter Stärke.</li>
-    <li><strong>Menge:</strong> Etwa 1 Teelöffel pro Tasse – bei orientalischer Zubereitung auch mehr.</li>
-    <li><strong>Verfeinerung:</strong> Mit Gewürzen wie Zimt, Nelken oder Kardamom für ein sinnliches Geschmackserlebnis.</li>
-  </ul>
-  <p>
-    In der orientalischen Teekultur wird der Tee oft mehrfach aufgegossen und in kunstvollen Gläsern serviert.
-    Das Einschenken aus einer hohen Kanne ist nicht nur praktisch – es symbolisiert Respekt und Eleganz.
-  </p>
+        <div class="command-item">
+          <div class="command-code">00000010</div>
+          <div class="command-desc">Backend & API Entwicklung</div>
+        </div>
 
-  <h4>🌿 Genussmoment mit Tiefe</h4>
-  <p>
-    Schwarzer Tee lädt zum Verweilen ein – ob morgens als kraftvoller Start, nachmittags als Gesprächsbegleiter oder abends als stiller Genussmoment.
-    Die Wärme der Tasse, der Duft der Gewürze und das sanfte Licht schaffen eine Atmosphäre der Ruhe und Verbundenheit.
-  </p>
-</section>
+        <div class="command-item">
+          <div class="command-code">00000011</div>
+          <div class="command-desc">Full-Stack Anwendungen</div>
+        </div>
 
-      </section>
-      <section id="krauter-tee">
-      <img src="pics/krautertee.png" alt="Kräuter Tee" width="200" height="300"/>
-        <h3>Kräutertee – Natur in der Tasse, Ruhe für die Seele</h3>
+        <div class="command-item">
+          <div class="command-code">00000100</div>
+          <div class="command-desc">Datenbank & Infrastruktur</div>
+        </div>
 
-<p>– er ist ein Geschenk der Pflanzenwelt, ein sanfter Begleiter für Körper und Geist und ein Moment der Achtsamkeit im Alltag.</p>
+        <div class="command-item">
+          <div class="command-code">00000101</div>
+          <div class="command-desc">DevOps & CI/CD Pipelines</div>
+        </div>
 
-<h4>🌿 Ursprung und Tradition</h4>
-<p>
-  Kräutertee ist keine klassische Teesorte im engeren Sinne, da er nicht aus der Teepflanze stammt, sondern aus getrockneten Blättern, Blüten, Samen oder Wurzeln verschiedenster Heilpflanzen.
-  Schon in der Antike nutzten Kulturen wie die Ägypter, Griechen und Römer Kräutertees zur Linderung von Beschwerden und zur Förderung des Wohlbefindens.
-</p>
-<p>
-  In Klostergärten des Mittelalters wurden Heilkräuter wie Salbei, Kamille und Melisse kultiviert – ihre Wirkung wurde in der Volksmedizin über Generationen weitergegeben.
-  Heute ist Kräutertee weltweit beliebt – ob als beruhigender Abendtee, als belebender Morgentrunk oder als wohltuende Begleitung bei Erkältungen.
-</p>
+        <div class="command-item">
+          <div class="command-code">00000110</div>
+          <div class="command-desc">Python Entwicklung</div>
+        </div>
 
-<h4>🍃 Sortenvielfalt</h4>
-<ul>
-  <li><strong>Kamille:</strong> Mild und beruhigend – ideal bei Magenbeschwerden und zur Entspannung.</li>
-  <li><strong>Pfefferminze:</strong> Erfrischend und kühlend – wirkt krampflösend und fördert die Verdauung.</li>
-  <li><strong>Salbei:</strong> Würzig und antiseptisch – hilfreich bei Halsschmerzen und Entzündungen.</li>
-  <li><strong>Zitronenmelisse:</strong> Sanft zitronig – beruhigt die Nerven und fördert den Schlaf.</li>
-</ul>
+        <div class="command-item">
+          <div class="command-code">00000111</div>
+          <div class="command-desc">Über Mich / Kontakt</div>
+        </div>
 
-<h4>💚 Gesundheitliche Wirkung</h4>
-<p>Kräutertees bieten eine Fülle an natürlichen Wirkstoffen, die gezielt unterstützen können:</p>
-<ul>
-  <li><strong>Ätherische Öle:</strong> Wirken antibakteriell, entspannend oder anregend – je nach Pflanze.</li>
-  <li><strong>Gerbstoffe:</strong> Unterstützen die Schleimhäute und helfen bei Entzündungen.</li>
-  <li><strong>Flavonoide:</strong> Antioxidativ und gefäßschützend – stärken das Immunsystem.</li>
-  <li><strong>Bitterstoffe:</strong> Fördern die Verdauung und regen den Stoffwechsel an.</li>
-</ul>
-<p>
-  Viele Kräutertees sind koffeinfrei und eignen sich daher hervorragend für Kinder, Schwangere oder als Abendgetränk.
-  Ihre Wirkung ist sanft, aber wirkungsvoll – oft spürbar schon nach wenigen Schlucken.
-</p>
+        <div class="command-item">
+          <div class="command-code">11111111</div>
+          <div class="command-desc">GitHub Profil</div>
+        </div>
+      </div>
 
-<h4>🍵 Zubereitung mit Gefühl</h4>
-<p>Die Zubereitung von Kräutertee ist einfach, aber verdient Aufmerksamkeit:</p>
-<ul>
-  <li><strong>Wassertemperatur:</strong> 90–100 °C – die meisten Kräuter entfalten ihr Aroma bei kochendem Wasser.</li>
-  <li><strong>Ziehzeit:</strong> 5–10 Minuten – je nach gewünschter Intensität und Kräuterart.</li>
-  <li><strong>Menge:</strong> Etwa 1–2 Teelöffel getrocknete Kräuter pro Tasse.</li>
-  <li><strong>Verfeinerung:</strong> Mit Honig, Zitrone oder frischen Kräutern für ein individuelles Geschmackserlebnis.</li>
-</ul>
-<p>
-  Besonders schön wirkt Kräutertee in Glasgefäßen, wo die Farben und Blätter sichtbar werden.
-  Die Zubereitung kann zu einem kleinen Ritual werden – ein Moment der Ruhe und Selbstfürsorge.
-</p>
+      <div class="footer">
+        Inspiriert von Konrad Zuses Z3 (1941) - Der erste funktionsfähige
+        Computer
+      </div>
+    </div>
 
-<h4>🌼 Genussmoment mit Tiefe</h4>
-<p>
-  Kräutertee lädt zum Innehalten ein – ob als wohltuende Pause, als Begleiter beim Lesen oder als sanfter Abschluss eines langen Tages.
-  Der Duft der Kräuter, die Wärme der Tasse und die natürliche Kraft der Pflanzen schaffen eine Atmosphäre der Geborgenheit.
-</p>
+    <script>
+      const projects = {
+        "00000001": {
+          title: "React & Frontend Projekte",
+          url: "https://github.com/yourusername/react-projects",
+          description:
+            "Moderne React-Anwendungen mit Next.js, TypeScript und Tailwind CSS",
+        },
+        "00000010": {
+          title: "Backend & API Entwicklung",
+          url: "https://github.com/yourusername/backend-projects",
+          description: "RESTful APIs mit Node.js, Express und PostgreSQL",
+        },
+        "00000011": {
+          title: "Full-Stack Anwendungen",
+          url: "https://github.com/yourusername/fullstack-projects",
+          description: "End-to-End Lösungen mit MERN/PERN Stack",
+        },
+        "00000100": {
+          title: "Datenbank & Infrastruktur",
+          url: "https://github.com/yourusername/database-projects",
+          description: "Datenbankdesign, Optimierung und Cloud-Architekturen",
+        },
+        "00000101": {
+          title: "DevOps & CI/CD",
+          url: "https://github.com/yourusername/devops-projects",
+          description:
+            "Automatisierung mit Docker, Kubernetes und GitHub Actions",
+        },
+        "00000110": {
+          title: "Python3 Projekte mit Flask",
+          url: "https://github.com/yourusername/mobile-projects",
+          description: "Cross-Platform Apps mit React Native",
+        },
+        "00000111": {
+          title: "Über Mich",
+          url: "https://github.com/yourusername",
+          description:
+            "Fullstack-Entwickler in Ausbildung | Kontakt & Informationen",
+        },
+        11111111: {
+          title: "GitHub Profil",
+          url: "https://github.com/yourusername",
+          description: "Besuchen Sie mein komplettes GitHub-Profil",
+        },
+      };
 
-      </section>
-      <section id="oolong-tee">
-            <img src="pics/oolongtee.png" alt="oolong tee im Becher" width="200" height="300"/>
-        <h3>Oolong-Tee – die Kunst der Balance zwischen Feuer und Blatt</h3>
+      const display = document.getElementById("display");
+      const codeInput = document.getElementById("codeInput");
+      const relays = document.querySelectorAll(".relay");
 
-<p>– er ist ein Meisterwerk der Teeverarbeitung, ein aromatischer Vermittler zwischen grünem und schwarzem Tee und ein Symbol für Harmonie und Handwerkskunst.</p>
+      // Enter-Taste Support
+      codeInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+          executeCode();
+        }
+      });
 
-<h4>🌿 Ursprung und Tradition</h4>
-<p>
-  Oolong-Tee stammt ursprünglich aus China, insbesondere aus den Provinzen Fujian und Guangdong, sowie aus Taiwan. Sein Name bedeutet „Schwarzer Drache“ und verweist auf die mystische Aura, die ihn umgibt.
-  Im Gegensatz zu grünem oder schwarzem Tee wird Oolong nur teilweise fermentiert – je nach Sorte zwischen 10 % und 70 %. Diese kontrollierte Oxidation verleiht ihm eine einzigartige Geschmacksvielfalt.
-</p>
-<p>
-  In der chinesischen Gongfu-Teezeremonie wird Oolong in kleinen Tonkännchen zubereitet und mehrfach aufgegossen – ein meditativer Akt, bei dem sich die Aromen Schicht für Schicht entfalten.
-  Oolong gilt als Tee der Kenner – komplex, wandelbar und voller Tiefe.
-</p>
+      // Nur 0 und 1 erlauben
+      codeInput.addEventListener("input", (e) => {
+        e.target.value = e.target.value.replace(/[^01]/g, "");
+        updateRelays(e.target.value);
+      });
 
-<h4>🍃 Sortenvielfalt</h4>
-<ul>
-  <li><strong>Da Hong Pao:</strong> Ein legendärer Felsentee mit rauchiger Tiefe und mineralischer Note.</li>
-  <li><strong>Tie Guan Yin:</strong> Blumig und weich – benannt nach der „Eisernen Göttin der Barmherzigkeit“.</li>
-  <li><strong>Dong Ding:</strong> Aus Taiwan – cremig, nussig und elegant.</li>
-  <li><strong>Oriental Beauty:</strong> Stark oxidiert, mit süßem, honigartigem Aroma – ein Tee mit königlicher Geschichte.</li>
-</ul>
+      function updateRelays(code) {
+        relays.forEach((relay, index) => {
+          if (code[index] === "1") {
+            relay.classList.add("active");
+          } else {
+            relay.classList.remove("active");
+          }
+        });
+      }
 
-<h4>💚 Gesundheitliche Wirkung</h4>
-<p>Oolong-Tee vereint die Vorteile von grünem und schwarzem Tee:</p>
-<ul>
-  <li><strong>Polyphenole:</strong> Antioxidativ und entzündungshemmend – schützen die Zellen und fördern die Hautgesundheit.</li>
-  <li><strong>Koffein:</strong> Wirkt belebend, aber sanfter als Kaffee – ideal für konzentriertes Arbeiten.</li>
-  <li><strong>Theanin:</strong> Fördert geistige Klarheit und innere Ruhe – ideal für kreative Phasen.</li>
-  <li><strong>Enzyme:</strong> Unterstützen den Stoffwechsel und können beim Abnehmen helfen.</li>
-</ul>
-<p>
-  Studien zeigen, dass Oolong-Tee den Cholesterinspiegel senken, die Verdauung fördern und die Herzgesundheit unterstützen kann.
-  Seine Wirkung ist subtil, aber nachhaltig – perfekt für Menschen, die Balance suchen.
-</p>
+      function executeCode() {
+        const code = codeInput.value.padEnd(8, "0");
 
-<h4>🍵 Zubereitung mit Gefühl</h4>
-<p>Die Zubereitung von Oolong-Tee ist ein Ritual der Achtsamkeit:</p>
-<ul>
-  <li><strong>Wassertemperatur:</strong> 80–90 °C – je nach Oxidationsgrad der Sorte.</li>
-  <li><strong>Ziehzeit:</strong> 1–3 Minuten – bei mehreren Aufgüssen jeweils etwas länger.</li>
-  <li><strong>Menge:</strong> Etwa 1 Teelöffel pro Tasse – bei Gongfu-Zubereitung mehr.</li>
-  <li><strong>Mehrfachaufguss:</strong> Hochwertiger Oolong entfaltet sich über 5–7 Aufgüsse hinweg.</li>
-</ul>
-<p>
-  Besonders schön wirkt Oolong in kleinen Ton- oder Porzellankännchen, wo sich sein Duft und Geschmack voll entfalten.
-  Die Zubereitung wird zur Reise – jeder Aufguss ein neues Kapitel.
-</p>
+        if (code.replace(/0/g, "") === "") {
+          displayMessage(
+            "FEHLER: Kein Code eingegeben, i'm afraid i can't do this DAVE!",
+            "error"
+          );
+          return;
+        }
 
-<h4>🌸 Genussmoment mit Tiefe</h4>
-<p>
-  Oolong-Tee lädt zum bewussten Genießen ein – ob als stiller Begleiter beim Schreiben, als meditativer Moment am Nachmittag oder als Gesprächsöffner unter Freunden.
-  Sein Duft, seine Wandlungsfähigkeit und seine Wärme schaffen eine Atmosphäre der Gelassenheit und Tiefe.
-</p>
+        displayMessage(
+          'VERARBEITUNG<span class="loading">...</span>',
+          "processing"
+        );
 
-      </section>
-    </main>
-<footer>
-  <p id="kontakt">&copy; 2025 Die Welt des Tees</p>
-  <p id="copyright">bei MO Webdesign</p>
-</footer>
+        setTimeout(() => {
+          if (projects[code]) {
+            const project = projects[code];
+            displayMessage(
+              `✓ CODE ERKANNT!<br><br>` +
+                `PROJEKT: ${project.title}<br>` +
+                `BESCHREIBUNG: ${project.description}<br><br>` +
+                `WEITERLEITUNG<span class="loading">...</span>`,
+              "success"
+            );
 
+            setTimeout(() => {
+              window.open(project.url, "_blank");
+              displayMessage("SYSTEM BEREIT FÜR NEUE EINGABE...", "success");
+              codeInput.value = "";
+              updateRelays("");
+            }, 2000);
+          } else {
+            displayMessage(
+              `✗ FEHLER!<br><br>` +
+                `Ungültiger Code: ${code}<br>` +
+                `Bitte verwenden Sie einen gültigen Befehlscode.`,
+              "error"
+            );
+          }
+        }, 1000);
+      }
+
+      function displayMessage(message, type) {
+        display.innerHTML = `<div class="${type}">${message}</div>`;
+      }
+
+      // Initiale Animation
+      setTimeout(() => {
+        displayMessage(
+          "SYSTEM INITIALISIERT<br>" +
+            "Z3 COMPUTER ONLINE<br>" +
+            "BEREIT FÜR BEFEHLSEINGABE...",
+          "success"
+        );
+      }, 500);
+    </script>
   </body>
 </html>
