@@ -418,9 +418,13 @@
       <div class="corner-decoration bottom-left"></div>
       <div class="corner-decoration bottom-right"></div>
 
-      <a href="#" class="back-button" onclick="history.back(); return false;"
-        >← ZURÜCK ZUR HAUPTSEITE</a
+      <a
+        href="index.html"
+        onclick="if(history.length > 1) { history.back(); return false; }"
+        class="back-button"
       >
+        ← ZURÜCK ZUR HAUPTSEITE
+      </a>
 
       <h1>⚡ PERSÖNLICHE DATENBANK ⚡</h1>
       <div class="subtitle">ENTWICKLER-PROFIL // SYSTEM 00000111</div>
